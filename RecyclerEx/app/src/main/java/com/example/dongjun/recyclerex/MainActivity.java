@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         movies.add(movie);
         movie=new Movie("Busan","Action","2016");
         movies.add(movie);
-
         movieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemview, int position) {
@@ -53,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),title,Toast.LENGTH_LONG).show();
             }
         });
-
         movieAdapter.notifyDataSetChanged();
-
     }
 }
