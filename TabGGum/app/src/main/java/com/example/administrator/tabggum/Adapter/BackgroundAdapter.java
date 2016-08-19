@@ -21,6 +21,7 @@ public class BackgroundAdapter extends RecyclerView.Adapter<BackgroundAdapter.My
 
     private Context mContext;
     private List<BackgroundImage> ImageList;
+
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public ImageView image;
         public TextView title;
