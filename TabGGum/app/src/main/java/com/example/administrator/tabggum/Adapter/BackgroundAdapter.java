@@ -43,8 +43,11 @@ public class BackgroundAdapter extends RecyclerView.Adapter<BackgroundAdapter.My
         return new MyViewHolder(itemView);
 }
 
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+
+
         BackgroundImage image = ImageList.get(position);
         holder.title.setText(image.getTitle());
         Glide.with(mContext).load(image.getImage()).into(holder.image);

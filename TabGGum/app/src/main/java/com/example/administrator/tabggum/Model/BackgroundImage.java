@@ -1,5 +1,7 @@
 package com.example.administrator.tabggum.Model;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Administrator on 2016-08-17.
  */
