@@ -14,29 +14,41 @@
         android:clipToPadding="false"
         android:scrollbars="vertical"
         />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_upload"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal"
+        app:fab_addButtonColorNormal="#fafafa"
+        app:fab_addButtonColorPressed="#f1f1f1"
+        app:fab_addButtonPlusIconColor="#808080"
         app:layout_anchor="@id/recycler"
         app:layout_anchorGravity="bottom|right|end"
-        app:layout_behavior="com.example.administrator.tabggum.Event.ScrollAwareFAB" />
+
+        >
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="#fafafa"
+            app:fab_title="Action A"
+            app:fab_colorPressed="#f1f1f1"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="#fafafa"
+            app:fab_title="Action with a very long name that won\'t fit on the screen"
+            app:fab_colorPressed="#f1f1f1"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageview"
-        app:layout_anchor="@id/recycler"
-        app:layout_anchorGravity="bottom|"
 
-        />
+
+
+
 
 
 </android.support.design.widget.CoordinatorLayout>

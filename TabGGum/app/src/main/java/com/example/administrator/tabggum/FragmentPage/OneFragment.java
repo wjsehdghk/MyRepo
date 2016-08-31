@@ -1,71 +1,53 @@
 package com.example.administrator.tabggum.FragmentPage;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.example.administrator.tabggum.Adapter.BackgroundAdapter;
-import com.example.administrator.tabggum.MainActivity;
 import com.example.administrator.tabggum.Model.BackgroundImage;
 import com.example.administrator.tabggum.R;
-
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by Administrator on 2016-08-17.
- */
 
 public class OneFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    LinearLayoutManager linearLayoutManager;
-    StaggeredGridLayoutManager gridLayoutManager;
+
+
     public List<BackgroundImage> ImageList = new ArrayList<>();
     RecyclerView.Adapter adapter;
     ImageView imageView;
-
-
+    Bitmap bitmap;
     public OneFragment() {
     }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prepareBackground();
 
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         return view;
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -74,15 +56,33 @@ public class OneFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
 
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        final View actionB = view.findViewById(R.id.action_b);
+        com.getbase.floatingactionbutton.FloatingActionButton actionC = new com.getbase.floatingactionbutton.FloatingActionButton(getContext());
+        actionC.setTitle("ggggg");
+        actionC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+            }
+        });
+        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) view.findViewById(R.id.multiple);
+        menuMultipleActions.addButton(actionC);
+        final com.getbase.floatingactionbutton.FloatingActionButton actionA = (com.getbase.floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_a);
+        actionA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionA.setTitle("Action A clicked");
+            }
+        });
+
+        /* FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 100);
             }
-        });
-
+        });*/
         recyclerView.setHasFixedSize(true);
         //gridLayoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         layoutManager = new GridLayoutManager(getActivity(), 2);
@@ -92,7 +92,6 @@ public class OneFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
-
 
     private void prepareBackground() {
         int[] covers = new int[]{
@@ -120,15 +119,17 @@ public class OneFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 100 && null != data) {
-            final Uri selectImageUri = data.getData();
-            final String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            final Cursor imagecursor = getActivity().getContentResolver().query(selectImageUri, filePathColumn, null, null, null);
+            Uri selectImageUri = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor imagecursor = getActivity().getContentResolver().query(selectImageUri, filePathColumn, null, null, null);
             imagecursor.moveToFirst();
-            final int columnIndex = imagecursor.getColumnIndex(filePathColumn[0]);
-            final String imagePath = imagecursor.getString(columnIndex);
+            int columnIndex = imagecursor.getColumnIndex(filePathColumn[0]);
+            String imagePath = imagecursor.getString(columnIndex);
             imagecursor.close();
-            final Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            bitmap = BitmapFactory.decodeFile(imagePath);
 
+
+            imageView.setImageBitmap(bitmap);
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
