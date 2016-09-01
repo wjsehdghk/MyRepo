@@ -54,8 +54,6 @@ public class OneFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         adapter = new BackgroundAdapter(getContext(), ImageList);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-
-
         final View actionB = view.findViewById(R.id.action_b);
         com.getbase.floatingactionbutton.FloatingActionButton actionC = new com.getbase.floatingactionbutton.FloatingActionButton(getContext());
         actionC.setTitle("ggggg");
