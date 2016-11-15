@@ -1,4 +1,4 @@
-package com.example.administrator.dandd;
+package myggum.okhttpclienttest;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
