@@ -1,3 +1,5 @@
 <resources>
+    <string name="vertical">세로형</string>
+    <string name="horizontal">가로형</string>
     <string name="app_name">OpenAPIforDAUMKAKAO</string>
 </resources>

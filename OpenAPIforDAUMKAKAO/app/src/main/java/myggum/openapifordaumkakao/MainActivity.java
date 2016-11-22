@@ -1,9 +1,14 @@
 package myggum.openapifordaumkakao;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +23,7 @@ import net.daum.mf.oauth.OAuthError;
 
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,16 +34,13 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     Retrofit retrofit;
+    ProgressDialog dialog;
     Channel channel;
     List<Channel.Item> items;
-    ImageView imageview;
+    List<Channel.Item> itemList;
     static final String apikey = "4f4ce90940718827c723e492596efbc4";
     APIService apiService;
-
     static final String CLIENT_ID = "829951459515136986";
-
-    TextView logText;
-
     /*@Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -93,12 +96,26 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         MobileOAuthLibrary.getInstance().uninitialize();
     }*/
+    RecyclerView recyclerView;
+    RecyclerView recyclerView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView2 = (RecyclerView)findViewById(R.id.recycler2);
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false));
+        //StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+       // recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView2.setItemAnimator(new DefaultItemAnimator());
+
+        dialog= new ProgressDialog(this);
+        recyclerView2.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         /*Button verify = (Button) findViewById(R.id.verify);
         verify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             MobileOAuthLibrary.getInstance().handleUrlScheme(uri);
         }*/
         button = (Button) findViewById(R.id.button);
-        imageview = (ImageView) findViewById(R.id.imageView);
+        // imageview = (ImageView) findViewById(R.id.imageView);
 
         channel = new Channel();
 
@@ -149,28 +166,50 @@ public class MainActivity extends AppCompatActivity {
         apiService = retrofit.create(APIService.class);
 
 
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<Channel> call = apiService.getImage(apikey, "카카오톡", "xml");
+                Call<Channel> call = apiService.getImage(apikey, "kakao", "xml");
+                dialog.setMessage("데이터 불러오는중");
+                dialog.show();
+                Call<Channel> call2 = apiService.getImage(apikey,"다음카카오","xml");
+
                 call.enqueue(new Callback<Channel>() {
                     @Override
                     public void onResponse(Call<Channel> call, Response<Channel> response) {
+
                         int statuscode = response.code();
                         Toast.makeText(getBaseContext(), "code : " + statuscode, Toast.LENGTH_LONG).show();
-                        channel = response.body();
-                        items = channel.getItemList();
-                        String str = items.get(0).getImage();
-                        Log.d("tag:::", "msg-->" + str);
-
-                        Glide.with(getBaseContext()).load(str).into(imageview);
-
+                        dialog.hide();
+                        items = response.body().getItemList();
+                        recyclerView.setAdapter(new ListAdapter(items, getBaseContext()));
                     }
 
                     @Override
                     public void onFailure(Call<Channel> call, Throwable t) {
                         String str = t.getLocalizedMessage();
                         Log.d("tag:::", "msg-->" + str);
+                    }
+                });
+
+
+                call2.enqueue(new Callback<Channel>() {
+                    @Override
+                    public void onResponse(Call<Channel> call, Response<Channel> response) {
+                        int statuscode = response.code();
+                        itemList = response.body().getItemList();
+                        dialog.hide();
+                        Toast.makeText(getBaseContext(), "code : " + statuscode, Toast.LENGTH_LONG).show();
+                        recyclerView2.setAdapter(new ListAdapter2(itemList,getBaseContext()));
+                    }
+
+                    @Override
+                    public void onFailure(Call<Channel> call, Throwable t) {
+                        String str = t.getLocalizedMessage();
+                        Log.d("tag:::", "msg-->" + str);
+
                     }
                 });
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_width="220dp"
+    android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/daumimage"
+            android:scaleType="fitXY"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+
+
+        <TextView
+            android:textColor="#00ff00"
+            android:textSize="15sp"
+            android:layout_below="@+id/daumimage"
+            android:id="@+id/daumtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:textColor="#ff00ff"
+            android:textSize="12sp"
+            android:layout_below="@+id/daumtext"
+            android:id="@+id/daumtext2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+</RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>
