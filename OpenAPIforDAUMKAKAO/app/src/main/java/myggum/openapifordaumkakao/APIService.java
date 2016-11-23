@@ -15,7 +15,7 @@ public interface APIService {
     @GET("search/image")
     Call<Channel> getImage(@Query("apikey")String apikey,
                            @Query("q") String name,@Query("output") String data);
-
+    //https://apis.daum.net/search/image?apikey={apikey}&q=다음카카오&output=json
 
 }
 /*

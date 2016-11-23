@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -99,21 +101,44 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView recyclerView2;
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.miProfile:
+                Toast.makeText(getBaseContext(), "테스트", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.miCompose:
+                Toast.makeText(getBaseContext(), "테스트", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        recyclerView2 = (RecyclerView)findViewById(R.id.recycler2);
+        recyclerView2 = (RecyclerView) findViewById(R.id.recycler2);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false));
+        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         //StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-       // recyclerView.setLayoutManager(gridLayoutManager);
+        // recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
 
-        dialog= new ProgressDialog(this);
+        dialog = new ProgressDialog(this);
         recyclerView2.setHasFixedSize(true);
         recyclerView.setHasFixedSize(true);
         /*Button verify = (Button) findViewById(R.id.verify);
@@ -166,15 +191,13 @@ public class MainActivity extends AppCompatActivity {
         apiService = retrofit.create(APIService.class);
 
 
-
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Call<Channel> call = apiService.getImage(apikey, "kakao", "xml");
+                Call<Channel> call = apiService.getImage(apikey, "영화", "xml");
                 dialog.setMessage("데이터 불러오는중");
                 dialog.show();
-                Call<Channel> call2 = apiService.getImage(apikey,"다음카카오","xml");
+                Call<Channel> call2 = apiService.getImage(apikey, "movie", "xml");
 
                 call.enqueue(new Callback<Channel>() {
                     @Override
@@ -202,7 +225,8 @@ public class MainActivity extends AppCompatActivity {
                         itemList = response.body().getItemList();
                         dialog.hide();
                         Toast.makeText(getBaseContext(), "code : " + statuscode, Toast.LENGTH_LONG).show();
-                        recyclerView2.setAdapter(new ListAdapter2(itemList,getBaseContext()));
+                        recyclerView2.setAdapter(new ListAdapter2(itemList, getBaseContext()));
+                        //  recyclerView2.scrollToPosition(itemList.size()-1);
                     }
 
                     @Override

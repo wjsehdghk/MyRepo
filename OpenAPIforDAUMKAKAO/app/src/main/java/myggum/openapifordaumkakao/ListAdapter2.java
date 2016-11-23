@@ -34,8 +34,8 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ListViewHold
 
     @Override
     public void onBindViewHolder(ListViewHolder holder, int position) {
-        holder.text1.setText(itemList.get(position).getTitle());
-        holder.text2.setText(itemList.get(position).getPubDate());
+        holder.text1.setText(itemList.get(position).getPubDate());
+        holder.text2.setText(itemList.get(position).getTitle());
         Glide.with(context).load(itemList.get(position).getImage()).into(holder.background);
 
         String str = itemList.get(position).getTitle();

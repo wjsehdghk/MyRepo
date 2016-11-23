@@ -1,5 +1,7 @@
 <resources>
-    <string name="vertical">세로형</string>
-    <string name="horizontal">가로형</string>
+    <string name="vertical">마이이젤-세로형</string>
+    <string name="horizontal">마이이젤-가로형</string>
     <string name="app_name">OpenAPIforDAUMKAKAO</string>
+    <string name="productlist">마이꿈</string>
+
 </resources>
