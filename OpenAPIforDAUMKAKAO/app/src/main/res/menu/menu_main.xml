@@ -2,14 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/miCompose"
-        android:icon="@drawable/file"
-        app:showAsAction="ifRoom"
-        android:title="file">
-    </item>
-    <item
-        android:id="@+id/miProfile"
-        android:icon="@drawable/location"
+        android:id="@+id/settingmode"
+        android:icon="@drawable/setmode"
         app:showAsAction="ifRoom|withText"
         android:title="location">
     </item>

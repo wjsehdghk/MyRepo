@@ -16,12 +16,22 @@ import java.util.List;
 /**
  * Created by Administrator on 2016-11-22.
  */
-public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ListViewHolder> {
+public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ListViewHolder>  {
 
-    private List<Channel.Item> itemList;
+
+
+
+    private List<Item> itemList;
     private Context context;
+    public ItemClick itemClick;
+    public interface ItemClick{
+        public void onClick(View view,int position);
+    }
 
-    public ListAdapter2(List<Channel.Item> itemList, Context context) {
+    public void setItemClick(ItemClick itemClick){
+        this.itemClick=itemClick;
+    }
+    public ListAdapter2(List<Item> itemList, Context context) {
         this.itemList = itemList;
         this.context = context;
     }
@@ -33,13 +43,21 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ListViewHold
     }
 
     @Override
-    public void onBindViewHolder(ListViewHolder holder, int position) {
-        holder.text1.setText(itemList.get(position).getPubDate());
-        holder.text2.setText(itemList.get(position).getTitle());
+    public void onBindViewHolder(ListViewHolder holder,final int position) {
+        holder.text1.setText(itemList.get(position).getTitle());
+       // holder.text2.setText(itemList.get(position).getTitle());
         Glide.with(context).load(itemList.get(position).getImage()).into(holder.background);
-
+        holder.background.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(itemClick!=null){
+                    itemClick.onClick(view,position);
+                }
+            }
+        });
         String str = itemList.get(position).getTitle();
         String str1 = itemList.get(position).getPubDate();
+
         Log.d("TAG","msg-->" + str + " " + str1  );
     }
 
@@ -56,7 +74,7 @@ public class ListAdapter2 extends RecyclerView.Adapter<ListAdapter2.ListViewHold
             super(v);
             background =(ImageView)v.findViewById(R.id.daumimage);
             text1= (TextView)v.findViewById(R.id.daumtext);
-            text2= (TextView)v.findViewById(R.id.daumtext2);
+            //text2= (TextView)v.findViewById(R.id.daumtext2);
         }
 
 

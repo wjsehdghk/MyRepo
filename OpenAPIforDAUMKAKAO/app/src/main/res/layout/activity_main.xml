@@ -1,52 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/button" />
-
-
-    <TextView
-
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
-        android:text="@string/vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
+    android:orientation="vertical"
+    android:id="@+id/linear"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/activity_vertical_margin">
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
-
-
-
-
-
-<TextView
-    android:textStyle="bold"
-    android:textColor="?attr/colorPrimaryDark"
-    android:textSize="20sp"
-    android:text="@string/horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </android.support.v7.widget.RecyclerView>
-
-</LinearLayout>
+    </FrameLayout>
+<android.support.design.widget.BottomNavigationView
+    app:itemTextColor="@drawable/bottomselect"
+    android:id="@+id/bottomview"
+    app:menu="@menu/bottom_menu"
+    android:layout_alignParentBottom="true"
+    app:itemIconTint="@drawable/bottomselect"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+</android.support.design.widget.BottomNavigationView>
+</RelativeLayout>
 

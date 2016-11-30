@@ -1,31 +1,37 @@
 package myggum.openapifordaumkakao;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-
-import net.daum.mf.oauth.MobileOAuthLibrary;
-import net.daum.mf.oauth.OAuthError;
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.util.List;
 
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import myggum.openapifordaumkakao.Fragment.ProductList;
+import myggum.openapifordaumkakao.Fragment.Setting;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,16 +40,122 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button;
-    Retrofit retrofit;
-    ProgressDialog dialog;
-    Channel channel;
-    List<Channel.Item> items;
-    List<Channel.Item> itemList;
-    static final String apikey = "4f4ce90940718827c723e492596efbc4";
-    APIService apiService;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        Log.d("TESTGG","2");
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+    }
+
     static final String CLIENT_ID = "829951459515136986";
-    /*@Override
+    BottomNavigationView bottomNavigationView;
+    FragmentManager fragmentManager;
+    FragmentTransaction ft;
+    ProductList productList;
+    Setting setting;
+    Fragment fragment;
+    ActionBar actionBar;
+    RelativeLayout layout;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settingmode:
+                Toast.makeText(getBaseContext(), "테스트", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("TESTGG","3");
+        setContentView(R.layout.activity_main);
+
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("MYGGUM");
+        layout = (RelativeLayout)findViewById(R.id.linear);
+        productList = new ProductList();
+        setting = new Setting();
+        fragmentManager = getSupportFragmentManager();
+        ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.container, productList);
+        ft.commit();
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomview);
+        //
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.home:
+                        fragment = productList;
+                        actionBar.setTitle("MYGGUM");
+                        break;
+                    case R.id.setting:
+                        fragment = setting;
+                        actionBar.setTitle("설정");
+                        break;
+                    case R.id.logout:
+                        Snackbar.make(layout,"로그아웃되었습니다",Snackbar.LENGTH_SHORT).show();
+                        return true;
+
+                }
+                final FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.container, fragment).commit();
+                return true;
+            }
+        });
+        /*dialog.setMessage("데이터 불러오는중");
+        dialog.show();*/
+
+    }
+}
+     /*Button verify = (Button) findViewById(R.id.verify);
+        verify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // access token 발급받기.
+                MobileOAuthLibrary.getInstance().authorize(MainActivity.this, oAuthListener);
+            }
+        });
+        Button profile = (Button) findViewById(R.id.profile);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // oauth 2.0 을 지원하는 profile API 사용하기
+                MobileOAuthLibrary.getInstance().requestResourceWithPath(getApplicationContext(),
+                        oAuthListener, "/user/v1/show.json");
+            }
+        });
+        Button expire = (Button) findViewById(R.id.expire);
+        expire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // access token 만료처리하기.
+                MobileOAuthLibrary.getInstance().expireAuthorization();
+                if (MobileOAuthLibrary.getInstance().isAuthorized()) {
+                    logText.append("expire fail");
+                } else {
+                    logText.append("expire success");
+                }
+            }
+        });
+        // 인증 진행중 Activity가 내려간 경우를 위해 여기서도 처리해준다.
+        Uri uri = getIntent().getData();
+        if (uri != null) {
+            // authorize() 호출 후에 url scheme을 통해 callback이 들어온다.
+            MobileOAuthLibrary.getInstance().handleUrlScheme(uri);
+        }*/
+// imageview = (ImageView) findViewById(R.id.imageView);
+
+ /*@Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
@@ -58,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
         public void onAuthorizeSuccess() {
             logText.append("onAuthorizeSuccess");
         }
-
         @Override
         public void onAuthorizeFail(OAuthError.OAuthErrorCodes errorCode, String errorMessage) {
             logText.append("onAuthorizeFail : " + errorMessage);
@@ -92,152 +203,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         MobileOAuthLibrary.getInstance().uninitialize();
     }*/
-    RecyclerView recyclerView;
-    RecyclerView recyclerView2;
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.miProfile:
-                Toast.makeText(getBaseContext(), "테스트", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.miCompose:
-                Toast.makeText(getBaseContext(), "테스트", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        recyclerView2 = (RecyclerView) findViewById(R.id.recycler2);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        //StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        // recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView2.setItemAnimator(new DefaultItemAnimator());
-
-        dialog = new ProgressDialog(this);
-        recyclerView2.setHasFixedSize(true);
-        recyclerView.setHasFixedSize(true);
-        /*Button verify = (Button) findViewById(R.id.verify);
-        verify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // access token 발급받기.
-                MobileOAuthLibrary.getInstance().authorize(MainActivity.this, oAuthListener);
-            }
-        });
-
-        Button profile = (Button) findViewById(R.id.profile);
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // oauth 2.0 을 지원하는 profile API 사용하기
-                MobileOAuthLibrary.getInstance().requestResourceWithPath(getApplicationContext(),
-                        oAuthListener, "/user/v1/show.json");
-            }
-        });
-        Button expire = (Button) findViewById(R.id.expire);
-        expire.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // access token 만료처리하기.
-                MobileOAuthLibrary.getInstance().expireAuthorization();
-                if (MobileOAuthLibrary.getInstance().isAuthorized()) {
-                    logText.append("expire fail");
-                } else {
-                    logText.append("expire success");
-                }
-            }
-        });
-        // 인증 진행중 Activity가 내려간 경우를 위해 여기서도 처리해준다.
-        Uri uri = getIntent().getData();
-        if (uri != null) {
-            // authorize() 호출 후에 url scheme을 통해 callback이 들어온다.
-            MobileOAuthLibrary.getInstance().handleUrlScheme(uri);
-        }*/
-        button = (Button) findViewById(R.id.button);
-        // imageview = (ImageView) findViewById(R.id.imageView);
-
-        channel = new Channel();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://apis.daum.net/")
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
-
-        apiService = retrofit.create(APIService.class);
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Call<Channel> call = apiService.getImage(apikey, "영화", "xml");
-                dialog.setMessage("데이터 불러오는중");
-                dialog.show();
-                Call<Channel> call2 = apiService.getImage(apikey, "movie", "xml");
-
-                call.enqueue(new Callback<Channel>() {
-                    @Override
-                    public void onResponse(Call<Channel> call, Response<Channel> response) {
-
-                        int statuscode = response.code();
-                        Toast.makeText(getBaseContext(), "code : " + statuscode, Toast.LENGTH_LONG).show();
-                        dialog.hide();
-                        items = response.body().getItemList();
-                        recyclerView.setAdapter(new ListAdapter(items, getBaseContext()));
-                    }
-
-                    @Override
-                    public void onFailure(Call<Channel> call, Throwable t) {
-                        String str = t.getLocalizedMessage();
-                        Log.d("tag:::", "msg-->" + str);
-                    }
-                });
-
-
-                call2.enqueue(new Callback<Channel>() {
-                    @Override
-                    public void onResponse(Call<Channel> call, Response<Channel> response) {
-                        int statuscode = response.code();
-                        itemList = response.body().getItemList();
-                        dialog.hide();
-                        Toast.makeText(getBaseContext(), "code : " + statuscode, Toast.LENGTH_LONG).show();
-                        recyclerView2.setAdapter(new ListAdapter2(itemList, getBaseContext()));
-                        //  recyclerView2.scrollToPosition(itemList.size()-1);
-                    }
-
-                    @Override
-                    public void onFailure(Call<Channel> call, Throwable t) {
-                        String str = t.getLocalizedMessage();
-                        Log.d("tag:::", "msg-->" + str);
-
-                    }
-                });
-
-            }
-        });
-    }
-}

@@ -44,8 +44,10 @@ public class ProductList extends Fragment {
     List<Item> items;
     List<Item> itemList;
     static final String apikey = "4f4ce90940718827c723e492596efbc4";
+
     public ProductList() {
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,7 @@ public class ProductList extends Fragment {
         channel = new Channel();
         dialog = new ProgressDialog(getContext());
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -65,17 +68,18 @@ public class ProductList extends Fragment {
         Log.d("tag", "test222222");
         return view;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Log.d("tag", "test11111");
-        Call<Channel> call = apiService.getImage(apikey, "햄버거", "xml");
-        Call<Channel> call2 = apiService.getImage(apikey, "나주곰탕", "xml");
+        Call<Channel> call = apiService.getImage(apikey, "원피스", "xml");
+        Call<Channel> call2 = apiService.getImage(apikey, "오버워치", "xml");
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         recyclerView2 = (RecyclerView) view.findViewById(R.id.recycler2);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         //StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        // recyclerView.setLayoutManager(gridLayoutManager);
+        //recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setHasFixedSize(true);
@@ -97,8 +101,7 @@ public class ProductList extends Fragment {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                         String str = items.get(position).getTitle();
 
-                        alert.setMessage(str + "\n"+"해당 제품 설정화면으로 이동하시겠습니까?");
-                        alert.setIcon(R.drawable.file);
+                        alert.setMessage(str + "\n" + "해당 제품 설정화면으로 이동하시겠습니까?");
                         alert.setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -130,15 +133,13 @@ public class ProductList extends Fragment {
                 int statuscode = response.code();
                 itemList = response.body().getItemList();
                 dialog.hide();
-
-                listAdapter2=new ListAdapter2(itemList,getContext());
+                listAdapter2 = new ListAdapter2(itemList, getContext());
                 listAdapter2.setItemClick(new ListAdapter2.ItemClick() {
                     @Override
                     public void onClick(View view, int position) {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                         String str = itemList.get(position).getTitle();
-                        alert.setMessage(str +"\n" + " 해당제품 설정화면으로 이동하시겠습니까?");
-                        alert.setIcon(R.drawable.file);
+                        alert.setMessage(str + "\n" + " 해당제품 설정화면으로 이동하시겠습니까?");
                         alert.setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -159,6 +160,7 @@ public class ProductList extends Fragment {
                 recyclerView2.setAdapter(listAdapter2);
                 //  recyclerView2.scrollToPosition(itemList.size()-1);
             }
+
             @Override
             public void onFailure(Call<Channel> call, Throwable t) {
                 String str = t.getLocalizedMessage();

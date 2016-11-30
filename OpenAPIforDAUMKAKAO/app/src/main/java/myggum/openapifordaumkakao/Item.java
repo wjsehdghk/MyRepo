@@ -38,6 +38,14 @@ public class Item{
         return thumbnail;
     }
 
+    public Integer getHeight() {
+        return height;
+    }
+
+    public Integer getWidth() {
+        return width;
+    }
+
     public String getImage() {
         return image;
     }
