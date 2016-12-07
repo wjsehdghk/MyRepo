@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
-
-    android:layout_height="200dp">
+    android:layout_width="wrap_content"
+    android:background="@drawable/tab"
+    android:layout_height="wrap_content">
     <Button
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/button"
+        android:background="@android:drawable/ic_delete"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/button2"
         android:layout_alignStart="@+id/button2" />
-    <android.support.v7.widget.AppCompatEditText
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/button2"
+        android:background="@android:drawable/ic_input_add"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+    <TextView
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:text="자막을 입력해주세요"
         android:layout_width="100dp"
-        android:layout_height="40dp"
         android:id="@+id/edit_query"
-        android:textColorHint="@android:color/holo_red_dark"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/button"
         android:layout_toStartOf="@+id/button" />
-    <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/button2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        />
 </RelativeLayout>
