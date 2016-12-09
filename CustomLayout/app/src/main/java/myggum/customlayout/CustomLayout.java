@@ -1,6 +1,7 @@
 package myggum.customlayout;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -36,10 +37,11 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         init();
         setAttr();
     }
+
     public void init() {
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        v = inflater.inflate(R.layout.customlayout,this,false);
+        v = inflater.inflate(R.layout.customlayout, this, false);
         addView(v);
         //부모 뷰그룹에 레이아웃 xml파일을 넣되, 바로 사용하지 않겟다는것이다.
         //addview를 통해 부모에 넣어야 한다.
@@ -59,10 +61,10 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         button1 = (Button) findViewById(R.id.button2);
     }
     public void setAttr() {
-        //editText.setText("자막을 입력해");
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 removeAllViews();
             }
         });
@@ -74,18 +76,21 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         });
     }
 
-
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         view.setFocusableInTouchMode(true);
-       view.requestFocus();
+        view.requestFocus();
         int width = ((ViewGroup) view.getParent()).getWidth() - view.getWidth();
-       // Log.v("부모레이아웃에서 자식 뷰를 뺀 넓이값", " " + width);
+        // Log.v("부모레이아웃에서 자식 뷰를 뺀 넓이값", " " + width);
         int xxxxx = ((ViewGroup) view.getParent()).getWidth();
         Log.v("부모레이아웃 넓이", " " + xxxxx);
         int yyyyy = view.getWidth();
-       // Log.v("뷰의 넓이값", " " + yyyyy);
+        // Log.v("뷰의 넓이값", " " + yyyyy);
         //부모 뷰의 넓이에서 자신의 뷰 넓이를 뺀 넓이 값.
         int height = ((ViewGroup) view.getParent()).getHeight() - view.getHeight();
         //Log.v("부모레이아웃에서 자식뷰를 뺀 높이값", " " + height);
@@ -93,7 +98,7 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         int xxxxx11 = ((ViewGroup) view.getParent()).getHeight();
         Log.v("부모레이아웃 높이", " " + xxxxx11);
         int yyyyy22 = view.getHeight();
-      //  Log.v("뷰의 높이값", " " + yyyyy22);
+        //  Log.v("뷰의 높이값", " " + yyyyy22);
         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
             // oldX = (int) motionEvent.getX();
             //oldY = (int) motionEvent.getY();
@@ -118,61 +123,61 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
             if (view.getX() > width && view.getY() > height) {
                 view.setX(width);
                 view.setY(height);
-                float x1=view.getX();
-                float y1= view.getY();
-                Log.d("뷰 x, y값 ", "x값"+ x1  + "    ,    y값 " +y1 +"");
+                float x1 = view.getX();
+                float y1 = view.getY();
+                Log.d("뷰 x, y값 ", "x값" + x1 + "    ,    y값 " + y1 + "");
                 //1. 오케이
             } else if (view.getX() < 0 && view.getY() > height) {
                 view.setX(0);
                 view.setY(height);
-                float x1=view.getX();
-                float y1= view.getY();
-                Log.d("뷰 x, y ", "x값 "+ x1  + ",y값 " +y1 +"");
+                float x1 = view.getX();
+                float y1 = view.getY();
+                Log.d("뷰 x, y ", "x값 " + x1 + ",y값 " + y1 + "");
                 //2. okay
             } else if (view.getX() > width && view.getY() < 0) {
                 view.setX(width);
                 view.setY(0);
-                float x1=view.getX();
-                float y1= view.getY();
-                Log.d("뷰 x, y값 ", "x값"+ x1  + "    ,    y값 " +y1 +"");
+                float x1 = view.getX();
+                float y1 = view.getY();
+                Log.d("뷰 x, y값 ", "x값" + x1 + "    ,    y값 " + y1 + "");
                 //3. okay
             } else if (view.getX() < 0 && view.getY() < 0) {
                 view.setX(0);
                 view.setY(0);
-                float x1=view.getX();
-                float y1= view.getY();
-                Log.d("뷰 x, y값 ", "x값"+ x1  + "    ,    y값 " +y1 +"");
+                float x1 = view.getX();
+                float y1 = view.getY();
+                Log.d("뷰 x, y값 ", "x값" + x1 + "    ,    y값 " + y1 + "");
                 //4. okay
             } else if (view.getX() < 0 || view.getX() > width) {
                 if (view.getX() < 0) {
                     view.setX(0);
                     view.setY(motionEvent.getRawY() + oldY);
-                   // view.setY(motionEvent.getRawY() - oldY - view.getHeight());
-                    float x1=view.getX();
-                    float y1= view.getY();
-                    Log.d("뷰 x, y값 ", "x값"+ x1  + "    ,    y값 " +y1 +"");
+                    // view.setY(motionEvent.getRawY() - oldY - view.getHeight());
+                    float x1 = view.getX();
+                    float y1 = view.getY();
+                    Log.d("뷰 x, y값 ", "x값" + x1 + "    ,    y값 " + y1 + "");
                 } else {
                     view.setX(width);
                     view.setY(motionEvent.getRawY() + oldY);
                     //view.setY(motionEvent.getRawY() - oldY - view.getHeight());
-                    float x1=view.getX();
-                    float y1= view.getY();
-                    Log.d("뷰 x, y값 ", "x값"+ x1  + "    ,    y값 " +y1 +"");
+                    float x1 = view.getX();
+                    float y1 = view.getY();
+                    Log.d("뷰 x, y값 ", "x값" + x1 + "    ,    y값 " + y1 + "");
                 }
             } else if (view.getY() < 0 || view.getY() > height) {
                 if (view.getY() < 0) {
                     //view.setX(motionEvent.getRawX() - oldX);
                     view.setX(motionEvent.getRawX() + oldX);
                     view.setY(0);
-                    float x1=view.getX();
-                    float y1= view.getY();
-                    Log.d("뷰 x, y값 ", "x값"+ x1  + "    ,    y값 " +y1 +"");
+                    float x1 = view.getX();
+                    float y1 = view.getY();
+                    Log.d("뷰 x, y값 ", "x값" + x1 + "    ,    y값 " + y1 + "");
                 } else {
                     view.setX(motionEvent.getRawX() + oldX);
                     view.setY(height);
-                    float x1=view.getX();
-                    float y1= view.getY();
-                    Log.d("뷰 x, y값 ", "x값"+ x1  + "    ,    y값 " +y1 +"");
+                    float x1 = view.getX();
+                    float y1 = view.getY();
+                    Log.d("뷰 x, y값 ", "x값" + x1 + "    ,    y값 " + y1 + "");
                 }
             }
         }
