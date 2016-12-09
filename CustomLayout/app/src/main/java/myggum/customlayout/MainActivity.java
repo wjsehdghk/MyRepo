@@ -1,6 +1,5 @@
 package myggum.customlayout;
 
-
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -28,7 +28,6 @@ import myggum.customlayout.Model.TextAttr;
 
 
 public class MainActivity extends AppCompatActivity {
-
     FrameLayout container;
     List<CustomLayout> customLayoutList;
     int num = 0;
@@ -46,18 +45,26 @@ public class MainActivity extends AppCompatActivity {
     TextView sizeText;
     SeekBar sizebar;
     Button button;
+    Animation newsanimation;
+    Animation newsanimation2;
+    LinearLayout textVelocity;
+    TextView textvelocity;
+    SeekBar velocitybar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         customLayoutList = new ArrayList<>();
         setContentView(R.layout.activity_main);
+        newsanimation = AnimationUtils.loadAnimation(this, R.anim.news);
+        newsanimation2 = AnimationUtils.loadAnimation(this, R.anim.news2);
         settingtextattr();
         adapter = new CaptionAdapter(getBaseContext(), attrs);
         fontview = (HorizontalScrollView) findViewById(R.id.font);
         colorview = (HorizontalScrollView) findViewById(R.id.bold);
         textView3 = (TextView) findViewById(R.id.textcolor);
         Sizelayout = (LinearLayout) findViewById(R.id.color);
+        textVelocity = (LinearLayout) findViewById(R.id.textvelocity);
         sizeText = (TextView) findViewById(R.id.sizetext);
         sizebar = (SeekBar) findViewById(R.id.sizeseekbar);
         captionattrview = (RecyclerView) findViewById(R.id.captionattr);
@@ -65,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
         captionattrview.setItemAnimator(new DefaultItemAnimator());
         captionattrview.setHasFixedSize(true);
         container = (FrameLayout) findViewById(R.id.container);
-         button = (Button) findViewById(R.id.button);
-
+        button = (Button) findViewById(R.id.button);
+        textvelocity = (TextView) findViewById(R.id.velocitytext);
+        velocitybar = (SeekBar) findViewById(R.id.velocityseekbar);
 
         //시크바를 눌렀을때의 이벤트
         sizebar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -75,8 +83,14 @@ public class MainActivity extends AppCompatActivity {
                 currentFocus = getCurrentFocus();
                 if (currentFocus instanceof CustomLayout) {
                     seekBar.setEnabled(true);
+                    if (progress < 13) {
+                        progress = 12;
+                        ((CustomLayout) currentFocus).textView.setTextSize(progress);
+                        sizeText.setText("" + progress + "pt");
+                        sizebar.setProgress(progress);
+                    }
                     ((CustomLayout) currentFocus).textView.setTextSize(progress);
-                    Log.d("sizetest", "" + ((CustomLayout) currentFocus).textView.getTextSize()/2);
+                    Log.d("sizetest", "" + ((CustomLayout) currentFocus).textView.getTextSize() / 2);
                     sizeText.setText("" + progress + "pt");
                 } else {
                     sizeText.setText("" + progress + "pt");
@@ -91,7 +105,48 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        velocitybar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentFocus = getCurrentFocus();
+                if (currentFocus instanceof CustomLayout) {
+                    seekBar.setEnabled(true);
+                    if (progress < 1) {
+                        progress = 1;
+                        newsanimation.setDuration((progress * 1000));
+                        newsanimation2.setDuration((progress * 1000));
+                        textvelocity.setText("자막 속도 " + progress);
+                        velocitybar.setProgress(progress);
+                    }
+                    newsanimation.setDuration((progress * 1000));
+                    newsanimation2.setDuration((progress * 1000));
+                    textvelocity.setText("자막 속도 " + progress);
+                }
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                currentFocus.startAnimation(newsanimation);
+                newsanimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        currentFocus.startAnimation(newsanimation2);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
             }
         });
         captionattrview.setAdapter(adapter);
@@ -104,21 +159,31 @@ public class MainActivity extends AppCompatActivity {
                     colorview.setVisibility(View.INVISIBLE);
                     Sizelayout.setVisibility(View.INVISIBLE);
                     textView3.setVisibility(View.INVISIBLE);
+                    textVelocity.setVisibility(View.INVISIBLE);
                 } else if (index == 1) {
                     fontview.setVisibility(View.INVISIBLE);
                     colorview.setVisibility(View.VISIBLE);
                     Sizelayout.setVisibility(View.INVISIBLE);
                     textView3.setVisibility(View.INVISIBLE);
+                    textVelocity.setVisibility(View.INVISIBLE);
                 } else if (index == 2) {
                     fontview.setVisibility(View.INVISIBLE);
                     colorview.setVisibility(View.INVISIBLE);
                     Sizelayout.setVisibility(View.VISIBLE);
                     textView3.setVisibility(View.INVISIBLE);
+                    textVelocity.setVisibility(View.INVISIBLE);
                 } else if (index == 3) {
                     fontview.setVisibility(View.INVISIBLE);
                     colorview.setVisibility(View.INVISIBLE);
                     Sizelayout.setVisibility(View.INVISIBLE);
                     textView3.setVisibility(View.VISIBLE);
+                    textVelocity.setVisibility(View.INVISIBLE);
+                } else if (index == 4) {
+                    fontview.setVisibility(View.INVISIBLE);
+                    colorview.setVisibility(View.INVISIBLE);
+                    Sizelayout.setVisibility(View.INVISIBLE);
+                    textView3.setVisibility(View.INVISIBLE);
+                    textVelocity.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -130,33 +195,20 @@ public class MainActivity extends AppCompatActivity {
                 customLayout.setFocusableInTouchMode(true);
                 //커스텀 자막 생성.
                 customLayout.setId(num);
-
-
                 //커스텀 자막에 ID번호 부여.
                 customLayoutList.add(customLayout);
                 //자막 리스트에 커스텀 자막 추가.
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(300, 200);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(300, 150);
                 customLayout.setOnTouchListener(customLayout);
                 container.addView(customLayoutList.get(num), params);
-                customLayoutList.get(num).button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        currentFocus.clearFocus();
-                        customLayoutList.remove(num);
 
-
-                    }
-                });
-
-                customLayoutList.get(num).textView.setText("자막을 입력해주세요. "+num);
-
+                customLayoutList.get(num).textView.setText("자막을 입력해주세요. " + num);
                 customLayoutList.get(num).requestFocus();
                 //포커스 얻기
-
-                sizebar.setProgress((int) customLayoutList.get(num).textView.getTextSize()/2);
-                sizeText.setText("" + (int) customLayoutList.get(num).textView.getTextSize()/2 + "pt");
+                sizebar.setProgress((int) customLayoutList.get(num).textView.getTextSize() / 2);
+                sizeText.setText("" + (int) customLayoutList.get(num).textView.getTextSize() / 2 + "pt");
+                customLayoutList.get(num).bringToFront();
                 num++;
-
                 //24
                 // Log.d("focustest", " "+(int)customLayout.textView.getTextSize() );
                 //48

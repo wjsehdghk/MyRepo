@@ -23,6 +23,7 @@
         android:textColor="#000000"
         android:text="자막을 입력해주세요"
         android:textSize="12dp"
+        android:maxLines="1"
         android:layout_width="100dp"
         android:id="@+id/edit_query"
         android:layout_height="wrap_content"
