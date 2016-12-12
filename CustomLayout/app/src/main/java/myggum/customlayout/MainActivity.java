@@ -30,7 +30,7 @@ import myggum.customlayout.Model.TextAttr;
 public class MainActivity extends AppCompatActivity {
     FrameLayout container;
     List<CustomLayout> customLayoutList;
-    int num = 0;
+    int numindex;
     CustomLayout customLayout;
     RecyclerView captionattrview;
     CaptionAdapter adapter;
@@ -50,11 +50,15 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout textVelocity;
     TextView textvelocity;
     SeekBar velocitybar;
+    int customindex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         customLayoutList = new ArrayList<>();
+
+        numindex = customLayoutList.size();
+
         setContentView(R.layout.activity_main);
         newsanimation = AnimationUtils.loadAnimation(this, R.anim.news);
         newsanimation2 = AnimationUtils.loadAnimation(this, R.anim.news2);
@@ -123,7 +127,11 @@ public class MainActivity extends AppCompatActivity {
                     newsanimation.setDuration((progress * 1000));
                     newsanimation2.setDuration((progress * 1000));
                     textvelocity.setText("자막 속도 " + progress);
+                } else {
+                    textvelocity.setText("자막속도" + progress);
+                    seekBar.setEnabled(false);
                 }
+
             }
 
             @Override
@@ -132,21 +140,25 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                currentFocus.startAnimation(newsanimation);
-                newsanimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        currentFocus.startAnimation(newsanimation2);
-                    }
+                if (currentFocus instanceof CustomLayout) {
+                    currentFocus.startAnimation(newsanimation);
+                    newsanimation.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            currentFocus.startAnimation(newsanimation2);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                        }
+                    });
+                }
             }
         });
         captionattrview.setAdapter(adapter);
@@ -193,22 +205,67 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View view) {
                 customLayout = new CustomLayout(getBaseContext());
                 customLayout.setFocusableInTouchMode(true);
+                numindex++;
                 //커스텀 자막 생성.
-                customLayout.setId(num);
                 //커스텀 자막에 ID번호 부여.
                 customLayoutList.add(customLayout);
+                customindex = customLayoutList.indexOf(customLayout);
+
+                Log.d("listnum", customindex + " ");
+
+                customLayout.button.setId(customindex);
+                customLayout.setId(customindex);
+                int numtest = customLayout.getId();
+                int numbottuntest = customLayout.button.getId();
+                Log.d("listnum", " " + numtest + "  " + numbottuntest);
+
+
+                View.OnClickListener listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int num = v.getId();
+                        Log.d("idtest ", " " + num);
+
+                       v.getParent().req
+                        currentFocus = getCurrentFocus();
+                        int num2222=currentFocus.getId();
+
+
+
+
+                        //container.removeViewAt(num);
+
+                        customLayout = customLayoutList.get(num);
+
+                        int num3 = customLayoutList.indexOf(customLayout);
+
+                        int num2 = customLayout.getId();
+
+                     //   container.removeViewAt(num2);
+
+                       // customLayoutList.remove(num3);
+
+                        numindex = customLayoutList.size();
+
+                        Log.d("listtesttest", num2222 + " ");
+
+                        Log.d("indextest", " " + numindex);
+                    }
+                };
+                customLayout.button.setOnClickListener(listener);
+                // customLayout.num = num;
+                //  customLayout.setTag(num);
                 //자막 리스트에 커스텀 자막 추가.
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(300, 150);
                 customLayout.setOnTouchListener(customLayout);
-                container.addView(customLayoutList.get(num), params);
-
-                customLayoutList.get(num).textView.setText("자막을 입력해주세요. " + num);
-                customLayoutList.get(num).requestFocus();
+                container.addView(customLayout, params);
+                // container.addView(customLayout,numindex,params);
+                customLayout.textView.setText("" + numindex);
+                customLayout.requestFocus();
                 //포커스 얻기
-                sizebar.setProgress((int) customLayoutList.get(num).textView.getTextSize() / 2);
-                sizeText.setText("" + (int) customLayoutList.get(num).textView.getTextSize() / 2 + "pt");
-                customLayoutList.get(num).bringToFront();
-                num++;
+                sizebar.setProgress((int) customLayout.textView.getTextSize() / 2);
+                sizeText.setText("" + (int) customLayout.textView.getTextSize() / 2 + "pt");
+                customLayout.bringToFront();
                 //24
                 // Log.d("focustest", " "+(int)customLayout.textView.getTextSize() );
                 //48
@@ -245,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
         //현재 포커스 받는 뷰 얻어온다.
         Log.d("focus", " " + currentFocus);
         if (currentFocus instanceof CustomLayout) {
+            int intnum = currentFocus.getId();
+            Log.d("currentnumtest", " " + intnum);
             switch (id) {
                 case R.id.barungothic:
                     typeface = Typeface.createFromAsset(getAssets(), "fonts/NanumBarunGothic.ttf");

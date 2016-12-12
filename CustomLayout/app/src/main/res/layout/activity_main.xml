@@ -53,7 +53,6 @@
         android:paddingTop="5dp">
 
         <include layout="@layout/fontview" />
-
         <include layout="@layout/colorview" />
 
         <LinearLayout

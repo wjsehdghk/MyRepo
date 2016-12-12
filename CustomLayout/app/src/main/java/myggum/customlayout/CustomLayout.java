@@ -14,6 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Administrator on 2016-10-20.
  */
@@ -25,6 +28,15 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
     View v;
     Button button;
     Button button1;
+    int id;
+
+
+
+    List<CustomLayout> customLayoutList;
+
+
+
+
 
     public CustomLayout(Context context) {
         super(context);
@@ -43,6 +55,8 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.customlayout, this, false);
         addView(v);
+
+        customLayoutList= new ArrayList<>();
         //부모 뷰그룹에 레이아웃 xml파일을 넣되, 바로 사용하지 않겟다는것이다.
         //addview를 통해 부모에 넣어야 한다.
         //inflater.inflate(R.layout.customlayout, this,true);
@@ -63,9 +77,13 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
     public void setAttr() {
         button.setOnClickListener(new OnClickListener() {
             @Override
+
             public void onClick(View view) {
 
                 removeAllViews();
+
+
+
             }
         });
         button1.setOnClickListener(new OnClickListener() {
