@@ -1,5 +1,6 @@
 package myggum.customlayout;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -28,26 +29,53 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
     View v;
     Button button;
     Button button1;
-    int id;
-
-
-
+    int number;
     List<CustomLayout> customLayoutList;
+    private GestureDetector mGesture;
+    private OnDoubleClickListener onDoubleClickListener;
 
+    interface OnDoubleClickListener{
+        void onDoubleClick(View view);
+    }
+    public void setOnDoubleClickListener(OnDoubleClickListener onDoubleClickListener){
+        this.onDoubleClickListener = onDoubleClickListener;
+    };
+    public int getNumber() {
+        return number;
+    }
 
-
-
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     public CustomLayout(Context context) {
         super(context);
         init();
         setAttr();
+        mGesture = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                if(onDoubleClickListener!=null) {
+                    onDoubleClickListener.onDoubleClick(CustomLayout.this);
+                }
+                return true;
+            }
+        });
     }
 
     public CustomLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
         setAttr();
+        mGesture = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                if(onDoubleClickListener!=null) {
+                    onDoubleClickListener.onDoubleClick(CustomLayout.this);
+                }
+                return true;
+            }
+        });
     }
 
     public void init() {
@@ -55,7 +83,6 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.customlayout, this, false);
         addView(v);
-
         customLayoutList= new ArrayList<>();
         //부모 뷰그룹에 레이아웃 xml파일을 넣되, 바로 사용하지 않겟다는것이다.
         //addview를 통해 부모에 넣어야 한다.
@@ -101,6 +128,7 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+       mGesture.onTouchEvent(motionEvent);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         int width = ((ViewGroup) view.getParent()).getWidth() - view.getWidth();

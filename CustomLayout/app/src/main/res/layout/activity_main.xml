@@ -6,22 +6,11 @@
     tools:context="myggum.customlayout.MainActivity">
 
     <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_toEndOf="@+id/container"
-        android:layout_toRightOf="@+id/container"
-        android:text="색깔" />
-
-    <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/button1"
         android:layout_marginTop="13dp"
         android:layout_toEndOf="@+id/container"
         android:layout_toRightOf="@+id/container"
@@ -53,63 +42,30 @@
         android:paddingTop="5dp">
 
         <include layout="@layout/fontview" />
+
         <include layout="@layout/colorview" />
 
-        <LinearLayout
-            android:id="@+id/color"
-            android:visibility="invisible"
-            android:background="@color/Grey"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:textColor="@color/White"
-                android:layout_gravity="center"
-                android:id="@+id/sizetext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="12pt" />
-            <SeekBar
-                android:id="@+id/sizeseekbar"
-                style="@style/Widget.AppCompat.SeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:max="100"
-                android:progress="12"
-                 />
-        </LinearLayout>
+        <include layout="@layout/textsize" />
+
+        <include layout="@layout/textvelocity" />
+
         <TextView
             android:id="@+id/textcolor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@android:color/holo_green_light"
-            android:text="2"
+            android:gravity="center"
+            android:text="BOLD"
             android:textStyle="bold"
             android:visibility="invisible" />
-        <LinearLayout
-            android:id="@+id/textvelocity"
-            android:visibility="invisible"
-            android:background="@color/Grey"
+        <TextView
+            android:id="@+id/texteffect"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:textColor="@color/White"
-                android:layout_gravity="center"
-                android:id="@+id/velocitytext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="자막 속도 : 5" />
-            <SeekBar
-                android:id="@+id/velocityseekbar"
-                style="@style/Widget.AppCompat.SeekBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:max="20"
-                android:progress="5"
-                />
-        </LinearLayout>
+            android:gravity="center"
+            android:text="자막 효과"
+            android:visibility="invisible"/>
+
+
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
