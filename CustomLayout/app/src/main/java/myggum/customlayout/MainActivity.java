@@ -1,5 +1,4 @@
 package myggum.customlayout;
-
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -29,9 +29,7 @@ import java.util.List;
 import myggum.customlayout.Adapter.CaptionAdapter;
 import myggum.customlayout.DialogFrag.DialogTextChange;
 import myggum.customlayout.Model.TextAttr;
-
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DialogTextChange.EditNameDialogListener {
     FrameLayout container;
     List<CustomLayout> customLayoutList;
     int numindex;
@@ -57,15 +55,21 @@ public class MainActivity extends AppCompatActivity {
     int customindex;
     TextView texteffect;
 
-
+    DialogTextChange dialogTextChange;
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        currentFocus = getCurrentFocus();
+        if (currentFocus instanceof CustomLayout) {
+            ((CustomLayout) currentFocus).textView.setText(inputText);
+           // Log.d("test11111", "  " + currentFocus);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         customLayoutList = new ArrayList<>();
-
         numindex = customLayoutList.size();
-
         setContentView(R.layout.activity_main);
         newsanimation = AnimationUtils.loadAnimation(this, R.anim.news);
         newsanimation2 = AnimationUtils.loadAnimation(this, R.anim.news2);
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.button);
         textvelocity = (TextView) findViewById(R.id.velocitytext);
         velocitybar = (SeekBar) findViewById(R.id.velocityseekbar);
-        texteffect = (TextView)findViewById(R.id.texteffect);
+        texteffect = (TextView) findViewById(R.id.texteffect);
 
         //시크바를 눌렀을때의 이벤트
         sizebar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -100,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
                         ((CustomLayout) currentFocus).textView.setTextSize(progress);
                         sizeText.setText("" + progress + "pt");
                         sizebar.setProgress(progress);
-
                     }
                     ((CustomLayout) currentFocus).textView.setTextSize(progress);
                     Log.d("sizetest", "" + ((CustomLayout) currentFocus).textView.getTextSize() / 2);
@@ -111,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "자막을 선택하세요", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -142,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -155,12 +156,10 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onAnimationStart(Animation animation) {
                         }
-
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             currentFocus.startAnimation(newsanimation2);
                         }
-
                         @Override
                         public void onAnimationRepeat(Animation animation) {
                         }
@@ -208,8 +207,7 @@ public class MainActivity extends AppCompatActivity {
                     textView3.setVisibility(View.INVISIBLE);
                     textVelocity.setVisibility(View.VISIBLE);
                     texteffect.setVisibility(View.INVISIBLE);
-                }
-                else if(index == 5){
+                } else if (index == 5) {
                     fontview.setVisibility(View.INVISIBLE);
                     colorview.setVisibility(View.INVISIBLE);
                     Sizelayout.setVisibility(View.INVISIBLE);
@@ -226,19 +224,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 customLayout = new CustomLayout(getBaseContext());
                 customLayout.setFocusableInTouchMode(true);
-
-
                 customLayout.setOnDoubleClickListener(new CustomLayout.OnDoubleClickListener() {
                     @Override
                     public void onDoubleClick(View view) {
+                        currentFocus = getCurrentFocus();
+
+                    //    String str1 =dialogTextChange.mEditText.getText().toString();
+                        if(currentFocus instanceof CustomLayout){
+                           String str = ((CustomLayout) currentFocus).textView.getText().toString();
+                            FragmentManager fm = getSupportFragmentManager();
+                            DialogTextChange   dialogTextChange = DialogTextChange.newInstance(str);
+                            dialogTextChange.show(fm, "JEON");
+                         //   dialogTextChange.mEditText.setText(str);
 
 
-                        FragmentManager fm = getSupportFragmentManager();
-                        DialogTextChange dialogTextChange = DialogTextChange.newInstance("hello");
-                        dialogTextChange.show(fm,"JEON");
-
-
-                        Toast.makeText(getBaseContext(),"자막을 변경합니다. ",Toast.LENGTH_SHORT).show();
+                            // dialogTextChange.mEditText.setText(str);
+                            //Log.d("strtest " , " " + str1);
+                        }
                     }
                 });
                 //numindex++;
@@ -303,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void settingtextattr() {
         int[] setting = new int[]{
                 R.drawable.font,

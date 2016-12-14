@@ -39,15 +39,13 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
     }
     public void setOnDoubleClickListener(OnDoubleClickListener onDoubleClickListener){
         this.onDoubleClickListener = onDoubleClickListener;
-    };
+    }
     public int getNumber() {
         return number;
     }
-
     public void setNumber(int number) {
         this.number = number;
     }
-
     public CustomLayout(Context context) {
         super(context);
         init();
@@ -62,7 +60,6 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
             }
         });
     }
-
     public CustomLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -77,9 +74,7 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
             }
         });
     }
-
     public void init() {
-
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.customlayout, this, false);
         addView(v);
@@ -106,11 +101,7 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
             @Override
 
             public void onClick(View view) {
-
                 removeAllViews();
-
-
-
             }
         });
         button1.setOnClickListener(new OnClickListener() {
@@ -120,12 +111,10 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
             }
         });
     }
-
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
     }
-
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
        mGesture.onTouchEvent(motionEvent);
