@@ -1,4 +1,6 @@
 package myggum.customlayout;
+
+import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -29,6 +32,7 @@ import java.util.List;
 import myggum.customlayout.Adapter.CaptionAdapter;
 import myggum.customlayout.DialogFrag.DialogTextChange;
 import myggum.customlayout.Model.TextAttr;
+
 public class MainActivity extends AppCompatActivity implements DialogTextChange.EditNameDialogListener {
     FrameLayout container;
     List<CustomLayout> customLayoutList;
@@ -52,16 +56,13 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
     LinearLayout textVelocity;
     TextView textvelocity;
     SeekBar velocitybar;
-    int customindex;
     TextView texteffect;
 
-    DialogTextChange dialogTextChange;
     @Override
     public void onFinishEditDialog(String inputText) {
         currentFocus = getCurrentFocus();
         if (currentFocus instanceof CustomLayout) {
             ((CustomLayout) currentFocus).textView.setText(inputText);
-           // Log.d("test11111", "  " + currentFocus);
         }
     }
 
@@ -91,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
         textvelocity = (TextView) findViewById(R.id.velocitytext);
         velocitybar = (SeekBar) findViewById(R.id.velocityseekbar);
         texteffect = (TextView) findViewById(R.id.texteffect);
-
         //시크바를 눌렀을때의 이벤트
         sizebar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
                     Toast.makeText(getBaseContext(), "자막을 선택하세요", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -139,11 +140,11 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
                     newsanimation2.setDuration((progress * 1000));
                     textvelocity.setText("자막 속도 " + progress);
                 } else {
-                    textvelocity.setText("자막속도" + progress);
+                    textvelocity.setText("자막 속도 " + progress);
                     velocitybar.setEnabled(false);
                 }
-
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -152,14 +153,31 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (currentFocus instanceof CustomLayout) {
                     currentFocus.startAnimation(newsanimation);
+                    velocitybar.setEnabled(false);
                     newsanimation.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
                         }
+
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             currentFocus.startAnimation(newsanimation2);
+                            newsanimation2.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    velocitybar.setEnabled(true);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+                                }
+                            });
                         }
+
                         @Override
                         public void onAnimationRepeat(Animation animation) {
                         }
@@ -167,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
                 }
             }
         });
+
         captionattrview.setAdapter(adapter);
         adapter.setOnItemClickListener(new CaptionAdapter.OnitemClickListener() {
             @Override
@@ -214,11 +233,9 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
                     textView3.setVisibility(View.INVISIBLE);
                     textVelocity.setVisibility(View.INVISIBLE);
                     texteffect.setVisibility(View.VISIBLE);
-
                 }
             }
         });
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -228,70 +245,71 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
                     @Override
                     public void onDoubleClick(View view) {
                         currentFocus = getCurrentFocus();
-
-                    //    String str1 =dialogTextChange.mEditText.getText().toString();
-                        if(currentFocus instanceof CustomLayout){
-                           String str = ((CustomLayout) currentFocus).textView.getText().toString();
+                        if (currentFocus instanceof CustomLayout) {
+                            String str = ((CustomLayout) currentFocus).textView.getText().toString();
                             FragmentManager fm = getSupportFragmentManager();
-                            DialogTextChange   dialogTextChange = DialogTextChange.newInstance(str);
-                            dialogTextChange.show(fm, "JEON");
-                         //   dialogTextChange.mEditText.setText(str);
-
-
-                            // dialogTextChange.mEditText.setText(str);
-                            //Log.d("strtest " , " " + str1);
+                            DialogTextChange dialogTextChange = DialogTextChange.newInstance(str);
+                            dialogTextChange.show(fm, "MYGGUM");
                         }
                     }
                 });
-                //numindex++;
-                //커스텀 자막 생성.
-                //커스텀 자막에 ID번호 부여.
                 customLayoutList.add(customLayout);
-                customindex = customLayoutList.indexOf(customLayout);
-                Log.d("listnum", customindex + " ");
-                customLayout.button.setId(customindex);
-                customLayout.setNumber(customindex);
+                // customindex = customLayoutList.indexOf(customLayout);
+                int numtest1 = customLayoutList.size();
+                Log.d("listnum", numtest1 + " ");
+                // customLayout.button.setId(customindex);
+                //  customLayout.setNumber(customindex);
                 int numtest = customLayout.getNumber();
                 int numbottuntest = customLayout.button.getId();
-                Log.d("listnum", " " + numtest + "  " + numbottuntest);
-              /*  View.OnClickListener listener = new View.OnClickListener() {
+                //  Log.d("listnum", " " + numtest + "  " + numbottuntest);
+                View.OnClickListener listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int num = v.getId();
-                        Log.d("idnumber ", " " + num);
-                       // customLayout.removeAllViews();
+                        //int num = v.getId();
+                        ViewParent view = v.getParent().getParent();
+                        if (view instanceof CustomLayout) {
+                            View view2 = (CustomLayout) view;
+                            Log.d("idnumber ", " " + view2);
+                            container.removeView(view2);
+                            customLayoutList.remove(view2);
+                            int num2 = container.getChildCount();
+                            int num3 = customLayoutList.size();
+                            Log.d("numbercheck", " " + num2 + " " + num3);
+                        }
+                        // customLayout.removeAllViews();
                         // customLayoutList.contains(customLayout)
-                       *//* if (num == customLayout.getNumber()) {
-                            container.removeView(customLayout);
-                            customLayoutList.remove(customLayout);
-                        }*//*
-                        //num --> 리스트안에서의 커스텀레이아웃 인덱스 번호.
-                        // Log.d(" focustest" , " " + currentFocus);
-                        // CustomLayout customLayout =
-                        //  if(customLayoutList.contains(customLayout)){
-                        // }
-                        //container.removeViewAt(num);
-                        //CustomLayout customLayout = customLayoutList.get()
-                        //int num3 = customLayoutList.indexOf(customLayout);
-                        //int num2 = customLayout.getId();
-                        //Log.d("indexnumber : ", " " + num3);
-                        // container.removeViewAt(num + 1);
-                        // customLayoutList.remove()
-                        // customLayoutList.remove(num3);
-                        numindex = customLayoutList.size();
-                        //  Log.d("listtesttest", num2 + " ");
-                        Log.d("listsize : ", " " + numindex);
+                        // if (num == customLayout.getNumber()) {
+                        //container.removeView(customLayout);
+                        //customLayoutList.remove(customLayout);
                     }
-                };*/
-                //customLayout.button.setOnClickListener(listener);
+                    //num --> 리스트안에서의 커스텀레이아웃 인덱스 번호.
+                    // Log.d(" focustest" , " " + currentFocus);
+                    // CustomLayout customLayout =
+                    // if(customLayoutList.contains(customLayout))
+                    //container.removeViewAt(num);
+                    //CustomLayout customLayout = customLayoutList.get()
+                    //int num3 = customLayoutList.indexOf(customLayout);
+                    //int num2 = customLayout.getId();
+                    //Log.d("indexnumber : ", " " + num3);
+                    // container.removeViewAt(num + 1);
+                    // customLayoutList.remove()
+                    // customLayoutList.remove(num3);
+                    // numindex = customLayoutList.size();
+                    //  Log.d("listtesttest", num2 + " ");
+                    // Log.d("listsize : ", " " + numindex);
+                };
+                customLayout.button.setOnClickListener(listener);
                 // customLayout.num = num;
                 //  customLayout.setTag(num);
                 //자막 리스트에 커스텀 자막 추가.
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(300, 150);
                 customLayout.setOnTouchListener(customLayout);
+                //  Log.d("numberckeck " , " " + numcheck);
                 container.addView(customLayout, params);
+                int numcheck = container.getChildCount();
+                Log.d("numberckeck ", " " + numcheck);
                 // container.addView(customLayout,numindex,params);
-                customLayout.textView.setText("자막을 입력하세요");
+                customLayout.textView.setText("두번 눌러주세요");
                 customLayout.requestFocus();
                 //포커스 얻기
                 sizebar.setProgress((int) customLayout.textView.getTextSize() / 2);
@@ -305,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements DialogTextChange.
             }
         });
     }
-
     public void settingtextattr() {
         int[] setting = new int[]{
                 R.drawable.font,

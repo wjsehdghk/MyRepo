@@ -23,11 +23,8 @@ import myggum.customlayout.R;
 public class DialogTextChange extends DialogFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
-
         EditNameDialogListener listener = (EditNameDialogListener) getActivity();
-
         listener.onFinishEditDialog(mEditText.getText().toString());
-
         dismiss();
     }
 
@@ -65,7 +62,7 @@ public class DialogTextChange extends DialogFragment implements View.OnClickList
         // Store dimensions of the screen in `size`
         Display display = window.getWindowManager().getDefaultDisplay();
         display.getSize(size);
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         // Set the width of the dialog proportional to 75% of the screen width
         window.setLayout((int) (size.x * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
@@ -76,13 +73,7 @@ public class DialogTextChange extends DialogFragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-
-
-       View view= inflater.inflate(R.layout.dialogtext, container);
-       mEditText =(EditText)view.findViewById(R.id.txt_your_name);
-
-        return view;
+        return inflater.inflate(R.layout.dialogtext, container);
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -93,9 +84,9 @@ public class DialogTextChange extends DialogFragment implements View.OnClickList
         mButton.setOnClickListener(this);
         String title = getArguments().getString("text");
         mEditText.setText(title);
-        getDialog().setTitle("자막 입력 창");
+        getDialog().setTitle("자막 입력");
         mEditText.requestFocus();
         //getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        //getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }

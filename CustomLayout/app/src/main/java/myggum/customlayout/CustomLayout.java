@@ -2,8 +2,12 @@ package myggum.customlayout;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.icu.text.LocaleDisplayNames;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -25,7 +29,12 @@ import java.util.List;
 public class CustomLayout extends RelativeLayout implements View.OnTouchListener {
     int oldX;
     int oldY;
+    private float this_orgX = -1, this_orgY = -1;
+    private float scale_orgX = -1, scale_orgY = -1;
+    private double scale_orgWidth = -1, scale_orgHeight = -1;
+    private double centerX, centerY;
     TextView textView;
+    private final static int SELF_SIZE_DP = 100;
     View v;
     Button button;
     Button button1;
@@ -33,13 +42,13 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
     List<CustomLayout> customLayoutList;
     private GestureDetector mGesture;
     private OnDoubleClickListener onDoubleClickListener;
-
-    interface OnDoubleClickListener{
+    interface OnDoubleClickListener {
         void onDoubleClick(View view);
     }
-    public void setOnDoubleClickListener(OnDoubleClickListener onDoubleClickListener){
+    public void setOnDoubleClickListener(OnDoubleClickListener onDoubleClickListener) {
         this.onDoubleClickListener = onDoubleClickListener;
     }
+
     public int getNumber() {
         return number;
     }
@@ -49,11 +58,10 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
     public CustomLayout(Context context) {
         super(context);
         init();
-        setAttr();
-        mGesture = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+        mGesture = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                if(onDoubleClickListener!=null) {
+                if (onDoubleClickListener != null) {
                     onDoubleClickListener.onDoubleClick(CustomLayout.this);
                 }
                 return true;
@@ -63,11 +71,10 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
     public CustomLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-        setAttr();
-        mGesture = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+        mGesture = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                if(onDoubleClickListener!=null) {
+                if (onDoubleClickListener != null) {
                     onDoubleClickListener.onDoubleClick(CustomLayout.this);
                 }
                 return true;
@@ -78,7 +85,7 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.customlayout, this, false);
         addView(v);
-        customLayoutList= new ArrayList<>();
+        customLayoutList = new ArrayList<>();
         //부모 뷰그룹에 레이아웃 xml파일을 넣되, 바로 사용하지 않겟다는것이다.
         //addview를 통해 부모에 넣어야 한다.
         //inflater.inflate(R.layout.customlayout, this,true);
@@ -95,29 +102,126 @@ public class CustomLayout extends RelativeLayout implements View.OnTouchListener
         textView = (TextView) findViewById(R.id.edit_query);
         button = (Button) findViewById(R.id.button);
         button1 = (Button) findViewById(R.id.button2);
-    }
-    public void setAttr() {
-        button.setOnClickListener(new OnClickListener() {
+        button1.setTag("scale");
+        button1.setOnTouchListener(new OnTouchListener() {
             @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        this_orgX = CustomLayout.this.getX();
+                        this_orgY = CustomLayout.this.getY();
+                        //커스텀 뷰의 현재 x,y값
+                        Log.d("getXY : ", " " + this_orgX + " " + this_orgY);
+                        scale_orgX = event.getRawX();
+                        scale_orgY = event.getRawY();
+                        // 터치 한 곳의 절대 x , y 값
+                        Log.d("getRawXY : ", " " + scale_orgX + " " + scale_orgY);
+                        scale_orgWidth = CustomLayout.this.getLayoutParams().width;
+                        scale_orgHeight = CustomLayout.this.getLayoutParams().height;
+                        //커스텀 뷰의 넓이, 높이 값.
+                        Log.d("customviewwidthheight:", " " + scale_orgWidth + " " + scale_orgHeight);
+                        centerX = CustomLayout.this.getX() + ((View) CustomLayout.this.getParent()).getX() +
+                                (float) CustomLayout.this.getWidth() / 2;
+                        Log.d("centerX :", " " + centerX);
+                        Log.d("getparentx", " " + ((View) CustomLayout.this.getParent()).getX());
+                        int result = 0;
+                        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+                        Log.d("resourceId", " " + resourceId);
+                        if (resourceId > 0) {
+                            result = getResources().getDimensionPixelSize(resourceId);
+                        }
+                        double statusBarHeight = result;
+                        Log.d("statusBarheight", " " + statusBarHeight);
+                        //50
+                        centerY = CustomLayout.this.getY() + ((View) CustomLayout.this.getParent()).getY() +
+                                statusBarHeight + (float) CustomLayout.this.getHeight() / 2;
+                        Log.d("centerY : ", " " + centerY);
+                        Log.d("getparenty", " " + ((View) CustomLayout.this.getParent()).getY());
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        double length1 = getLength(centerX, centerY, scale_orgX, scale_orgY);
+                        Log.d("length1", " " + length1);
+                        double length2 = getLength(centerX, centerY, event.getRawX(), event.getRawY());
+                        Log.d("length2", " " + length2);
+                        int size = convertDpToPixel(SELF_SIZE_DP, getContext());
+                        Log.d("size", " " + size);
+                        //200
+                        View customparentView = (View)CustomLayout.this.getParent();
+                        int parentwid=customparentView.getWidth();
+                        if (length2 > length1) {
+                            //scale up
+                            double offsetX = Math.abs(event.getRawX() - scale_orgX);
+                            int numtest2 = (int) offsetX;
+                            double offsetY = Math.abs(event.getRawY() - scale_orgY);
+                            int numtest1 = (int) offsetY;
+                            Log.d("numtest", " " + numtest1 + " " + numtest2);
+                            double offset = Math.max(offsetX, offsetY);
+                            Log.d("offset", " " + offset);
+                            offset = Math.round(offset);
+                            Log.d("offset2", " " + offset);
+                            CustomLayout.this.getLayoutParams().width += offset;
+                            if(CustomLayout.this.getLayoutParams().width > parentwid){
+                                CustomLayout.this.getLayoutParams().width = parentwid;
+                            }
+                            CustomLayout.this.getLayoutParams().height += offset;
+                            if(CustomLayout.this.getLayoutParams().height > 300){
+                                CustomLayout.this.getLayoutParams().height = 300;
+                            }
+                            onScaling(true);
+                        }
+                        //scale down
+                        else if (length2 < length1
+                                && CustomLayout.this.getLayoutParams().width > size / 2
+                                && CustomLayout.this.getLayoutParams().height > size / 2)
+                        {
+                            double offsetX = Math.abs(event.getRawX() - scale_orgX);
+                            double offsetY = Math.abs(event.getRawY() - scale_orgY);
+                            double offset = Math.max(offsetX, offsetY);
+                            offset = Math.round(offset);
+                            CustomLayout.this.getLayoutParams().width -= offset;
+                            CustomLayout.this.getLayoutParams().height -= offset;
+                            onScaling(false);
+                        }
+                        scale_orgX = event.getRawX();
+                        scale_orgY = event.getRawY();
+                        postInvalidate();
+                        requestLayout();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                }
+                return true;
+            }
+        });
+    }
 
-            public void onClick(View view) {
-                removeAllViews();
-            }
-        });
-        button1.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "hello", Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
+
+    protected void onScaling(boolean scaleUp) {
+    }
+
+    private static int convertDpToPixel(float dp, Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return (int) px;
+    }
+
+    private double getLength(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
+    }
+
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
     }
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-       mGesture.onTouchEvent(motionEvent);
+        mGesture.onTouchEvent(motionEvent);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
         int width = ((ViewGroup) view.getParent()).getWidth() - view.getWidth();

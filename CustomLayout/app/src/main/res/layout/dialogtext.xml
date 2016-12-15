@@ -2,24 +2,21 @@
     android:id="@+id/edit_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-     android:orientation="vertical"  >
-
+    android:orientation="vertical">
     <TextView
         android:id="@+id/lbl_your_name"
-        android:text="텍스트 입력"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:text="텍스트 입력" />
     <EditText
         android:id="@+id/txt_your_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-         />
+        android:inputType="text" />
     <Button
-        android:layout_gravity="bottom|right"
-        android:text="확인"
         android:id="@+id/okbutton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="확인" />
 </LinearLayout>

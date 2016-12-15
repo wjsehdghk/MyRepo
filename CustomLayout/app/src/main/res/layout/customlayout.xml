@@ -21,7 +21,7 @@
         android:layout_alignParentEnd="true" />
     <TextView
         android:textColor="#000000"
-        android:text="자막을 입력해주세요"
+        android:text="더블 클릭해 주세요"
         android:textSize="12dp"
         android:maxLines="1"
         android:layout_width="100dp"
