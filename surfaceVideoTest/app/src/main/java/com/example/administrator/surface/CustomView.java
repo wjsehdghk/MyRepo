@@ -10,50 +10,47 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
+
+import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 /**
  * Created by Administrator on 2016-09-22.
  */
-public class CustomView extends RelativeLayout implements View.OnTouchListener {
+public class CustomView extends FrameLayout implements View.OnTouchListener {
     int oldX;
     int oldY;
     View v;
-    Button button;
-   // VideoView videoView;
+    LayoutInflater inflater;
+    public Button button;
+    public VideoView videoView;
+    public ProgressBar progressBar;
+    public Button startButton;
+    public Button stopButton;
 
     public CustomView(Context context) {
         super(context);
         init();
 
     }
-
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
     }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
     public void init(){
-        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v= inflater.inflate(R.layout.video,this,false);
+        inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        v= inflater.inflate(R.layout.video,this,false);
         addView(v);
+        videoView = (VideoView)findViewById(R.id.videoView);
+        button = (Button)findViewById(R.id.button);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
     }
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+
         v.setFocusableInTouchMode(true);
         v.requestFocus();
         int width = ((ViewGroup) v.getParent()).getWidth() - v.getWidth();
