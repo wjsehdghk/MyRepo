@@ -1,0 +1,19 @@
+<resources>
+    <string name="vertical">세로형</string>
+    <string name="horizontal">가로형</string>
+    <string name="app_name">OpenAPIforDAUMKAKAO</string>
+    <string name="productlist">마이꿈</string>
+    <string name="product">마이이젤</string>
+    <string name="alarm">3G/4G 사용자 알림</string>
+    <string name="alarm_msg">3g/4g환경에서 App실행시 알림팝업을 제공합니다</string>
+    <string name="information">정보</string>
+    <string name="info_version">버전정보</string>
+    <string name="service1">공지사항</string>
+    <string name="service2">이용약관</string>
+    <string name="info_version2">1.0.1(최신버전)</string>
+    <string name="service">서비스 문의</string>
+    <string name="person_info">개인정보 취급방침</string>
+    <string name="myggum">대표: 정상국|주소 : 서울시 강남구 봉은사로 108 (역삼동, 글라스톤 빌딩 9층)
+사업자등록번호 : 220-87-83493 |통신판매업신고번호 : 제 2001 - 서울강남-00810호</string>
+    <string name="copyright">Copyright ⓒ 2016 MYGGUM CO., LTD. All Rights Reserved.</string>
+</resources>

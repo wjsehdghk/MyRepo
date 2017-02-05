@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">커스텀테스트</string>
+    <string name="hint" > 자막을 입력해주세요</string>
+</resources>
